@@ -1,0 +1,29 @@
+body {
+  background: lightgray;
+}
+
+#notes {
+  column-count: 4;
+  column-gap: 16px;
+}
+
+.note {
+  border: 1px gray solid;
+  background: lightyellow;
+  margin: 5px;
+  padding: 5px;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+
+.ntitle {
+  font-weight: bold;
+  font-size: 110%;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
