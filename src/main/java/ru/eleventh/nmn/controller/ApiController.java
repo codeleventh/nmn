@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +28,9 @@ public class ApiController {
     }
 
     @PostMapping("note")
-    public ResponseEntity<?> createNote(String title, String body) {
-        Note note = noteService.createNote(title, body);
-        return new ResponseEntity<>(note, HttpStatus.CREATED);
+    public ResponseEntity<?> createNote(@RequestBody Note note) {
+        Note newNote = noteService.createNote(note.getTitle(), note.getBody());
+        return new ResponseEntity<>(newNote, HttpStatus.CREATED);
     }
 
     @GetMapping("note/{id}")
@@ -36,9 +38,9 @@ public class ApiController {
         return new ResponseEntity<>(noteService.getNote(id), HttpStatus.OK);
     }
 
-    @PostMapping("note/{id}")
-    public ResponseEntity<?> updateNote(@PathVariable Long id, String title, String body) {
-        noteService.updateNote(id, title, body);
+    @PutMapping("note/{id}")
+    public ResponseEntity<?> updateNote(@RequestBody Note note) {
+        noteService.updateNote(note.getId(), note.getTitle(), note.getBody());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
