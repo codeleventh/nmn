@@ -9,6 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {notes: []};
     this.newNote = this.newNote.bind(this);
+    this.searchNote = this.searchNote.bind(this);
   }
 
   componentDidMount() {
@@ -43,14 +44,24 @@ class App extends React.Component {
     }).catch(error => alert('Error: ' + error));
   }
 
+  searchNote() {
+
+  }
+
   render() {
     const notes = this.state.notes.map(note =>
         <Note note={note}/>
     );
     return (
         <div>
-          <div>{notes}</div>
-          <button onClick={this.newNote}>new</button>
+          <div id="toolbar">
+            <button onClick={this.newNote}>➕</button>
+            <input type="text" size="30"></input>
+            <button onClick={this.searchNote}>🔍</button>
+          </div>
+          <div id="notes">
+            {notes}
+          </div>
         </div>
     )
   }
@@ -109,11 +120,11 @@ class Note extends React.Component {
       return <div></div>;
     } else {
       return (
-          <div>
+          <div class="note">
             <div class="ntitle">{this.state.title}</div>
             <div class="nbody">{this.state.body}</div>
             <button onClick={this.editNote}>✏️</button>
-            <button onClick={this.deleteNote}>🗑</button>
+            <button onClick={this.deleteNote}>🗑️</button>
           </div>
       )
     }
