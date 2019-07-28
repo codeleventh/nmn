@@ -12,9 +12,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    client({method: 'GET', path: '/api/note'}).done(response => {
-      this.setState({notes: response.entity});
+    var json = fetch('/api/note', {method: 'GET'})
+    .then(function (response) {
+      return response.json();
     });
+    this.setState({notes: json});
   }
 
   render() {
@@ -27,20 +29,34 @@ class App extends React.Component {
 class Notes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {notes: props.notes};
-
+    this.state = {notes: []};
     this.newNote = this.newNote.bind(this);
   }
 
-  newNote() {
+  newNote(e) {
     var title = prompt("New title:", "note title");
     var body = prompt("New body:", "note body");
-    client({method: 'GET', path: '/api/note'}).done(response => {
-      this.setState({notes: response.entity});
-    });
-    this.setState(prev => ({
-      notes: [...prev.notes, {title: title, body: body}]
-    }));
+
+    fetch('/api/note', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: 0,
+        title: title,
+        body: body
+      })
+    }).then(function (response) {
+      return response.json();
+    }).then(json => {
+      this.setState(prev => ({
+        notes: [...prev.notes, {
+          id: json.id,
+          title: title, body: body
+        }]
+      }))
+    }).catch(error => alert('Ошибка: ' + error));
   }
 
   render() {
@@ -69,13 +85,12 @@ class Note extends React.Component {
   }
 
   editNote() {
-    // TODO: title == body == null -> are you mad?
-    // переиспользовать метод
     this.setState(state => ({
       title: prompt("Title:", state.title),
       body: prompt("Body:", state.body)
     }));
   }
+
   editNote() {
     this.setState({
       title: prompt("New title:", this.state.title),
@@ -108,3 +123,6 @@ ReactDOM.render(
     document.getElementById('react')
 );
 
+// TODO: первое обновление стейта
+// TODO: передача параметров в методы
+// TODO: (title == body == null) -> are you mad?
