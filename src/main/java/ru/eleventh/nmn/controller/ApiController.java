@@ -39,8 +39,8 @@ public class ApiController {
     }
 
     @PutMapping("note/{id}")
-    public ResponseEntity<?> updateNote(@RequestBody Note note) {
-        noteService.updateNote(note.getId(), note.getTitle(), note.getBody());
+    public ResponseEntity<?> updateNote(@PathVariable Long id, @RequestBody Note note) {
+        noteService.updateNote(id, note.getTitle(), note.getBody());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -5,32 +5,16 @@ const ReactDOM = require('react-dom');
 const client = require('./client');
 
 class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {notes: []};
-  }
-
-  componentDidMount() {
-    var json = fetch('/api/note', {method: 'GET'})
-    .then(function (response) {
-      return response.json();
-    });
-    this.setState({notes: json});
-  }
-
-  render() {
-    return (
-        <Notes notes={this.state.notes}/>
-    );
-  }
-}
-
-class Notes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {notes: []};
     this.newNote = this.newNote.bind(this);
+  }
+
+  componentDidMount() {
+    client({method: 'GET', path: '/api/note'}).done(response => {
+      this.setState({notes: response.entity});
+    });
   }
 
   newNote(e) {
@@ -43,7 +27,6 @@ class Notes extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: 0,
         title: title,
         body: body
       })
@@ -53,14 +36,15 @@ class Notes extends React.Component {
       this.setState(prev => ({
         notes: [...prev.notes, {
           id: json.id,
-          title: title, body: body
+          title: title,
+          body: body
         }]
       }))
-    }).catch(error => alert('Ошибка: ' + error));
+    }).catch(error => alert('Error: ' + error));
   }
 
   render() {
-    var notes = this.state.notes.map(note =>
+    const notes = this.state.notes.map(note =>
         <Note note={note}/>
     );
     return (
@@ -76,6 +60,7 @@ class Note extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: props.note.id,
       title: props.note.title,
       body: props.note.body,
       isHidden: false
@@ -85,21 +70,38 @@ class Note extends React.Component {
   }
 
   editNote() {
-    this.setState(state => ({
-      title: prompt("Title:", state.title),
-      body: prompt("Body:", state.body)
-    }));
-  }
+    var newTitle = prompt("New title:", this.state.title);
+    var newBody = prompt("New body:", this.state.body);
 
-  editNote() {
-    this.setState({
-      title: prompt("New title:", this.state.title),
-      body: prompt("New body:", this.state.title)
-    });
+    fetch('/api/note/' + this.state.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: newTitle,
+        body: newBody
+      })
+    }).then(response => {
+      if (response.ok) {
+        this.setState({
+          body: newBody,
+          title: newTitle
+        })
+      }
+    }).catch(error => alert('Error: ' + error))
   }
 
   deleteNote() {
-    this.setState({isHidden: true});
+    fetch('/api/note/' + this.state.id, {
+      method: 'DELETE'
+    }).then(response => {
+      if (response.ok) {
+        this.setState({
+          isHidden: true,
+        })
+      }
+    }).catch(error => alert('Error: ' + error))
   }
 
   render() {
