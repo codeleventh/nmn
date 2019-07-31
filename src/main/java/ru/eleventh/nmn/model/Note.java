@@ -18,6 +18,12 @@ public class Note {
     public Note() {
     }
 
+    public Note(Long id, String title, String body) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+    }
+
     public Note(String title, String body) {
         this.title = title;
         this.body = body;

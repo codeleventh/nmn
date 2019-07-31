@@ -21,6 +21,10 @@ class App extends React.Component {
   newNote(e) {
     var title = prompt("New title:", "note title");
     var body = prompt("New body:", "note body");
+    if (title == body == undefined) {
+      alert('Note cannot be empty! Try again.')
+    }
+    return;
 
     fetch('/api/note', {
       method: 'POST',
@@ -44,8 +48,22 @@ class App extends React.Component {
     }).catch(error => alert('Error: ' + error));
   }
 
-  searchNote() {
+  searchNote(e) {
+    e.preventDefault();
+    const searchString = document.getElementById('input').value;
 
+    fetch('/api/search?query=' + encodeURIComponent(searchString))
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      } else {
+        return {notes: []};
+      }
+    })
+    .then(notes =>
+        this.setState({notes: notes})
+    )
+    .catch(error => alert('Error: ' + error));
   }
 
   render() {
@@ -56,7 +74,7 @@ class App extends React.Component {
         <div>
           <div id="toolbar">
             <button onClick={this.newNote}>➕</button>
-            <input type="text" size="30"></input>
+            <input type="text" size="30" id="input"></input>
             <button onClick={this.searchNote}>🔍</button>
           </div>
           <div id="notes">
@@ -81,8 +99,8 @@ class Note extends React.Component {
   }
 
   editNote() {
-    var newTitle = prompt("New title:", this.state.title);
-    var newBody = prompt("New body:", this.state.body);
+    var newTitle = prompt('New title:', this.state.title);
+    var newBody = prompt('New body:', this.state.body);
 
     fetch('/api/note/' + this.state.id, {
       method: 'PUT',
@@ -135,7 +153,3 @@ ReactDOM.render(
     <App/>,
     document.getElementById('react')
 );
-
-// TODO: первое обновление стейта
-// TODO: передача параметров в методы
-// TODO: (title == body == null) -> are you mad?
