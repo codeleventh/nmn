@@ -2,9 +2,8 @@ body {
   background: lightgray;
 }
 
-#notes {
-  column-count: 4;
-  column-gap: 16px;
+#toolbar {
+  margin: 0 10px;
 }
 
 .note {
@@ -14,6 +13,8 @@ body {
   padding: 5px;
   overflow-y: scroll;
   max-height: 200px;
+  min-width: 200px;
+  display: inline-block;
 }
 
 .ntitle {
@@ -21,7 +22,7 @@ body {
   font-size: 110%;
 }
 
-button {
+button, input[type='button'], input[type='submit'] {
   background-color: transparent;
   border: none;
   outline: none;

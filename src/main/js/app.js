@@ -22,9 +22,9 @@ class App extends React.Component {
     var title = prompt("New title:", "note title");
     var body = prompt("New body:", "note body");
     if (title == body == undefined) {
-      alert('Note cannot be empty! Try again.')
+      alert('Note cannot be empty! Try again.');
+      return;
     }
-    return;
 
     fetch('/api/note', {
       method: 'POST',
@@ -41,8 +41,8 @@ class App extends React.Component {
       this.setState(prev => ({
         notes: [...prev.notes, {
           id: json.id,
-          title: title,
-          body: body
+          title: json.title,
+          body: json.body
         }]
       }))
     }).catch(error => alert('Error: ' + error));
@@ -59,24 +59,24 @@ class App extends React.Component {
       } else {
         return {notes: []};
       }
-    })
-    .then(notes =>
-        this.setState({notes: notes})
-    )
-    .catch(error => alert('Error: ' + error));
+    }).then(notes => {
+          this.setState({});
+          this.setState({notes: notes})
+        }
+    ).catch(error => alert('Error: ' + error));
   }
 
   render() {
     const notes = this.state.notes.map(note =>
-        <Note note={note}/>
+        <Note key={note.id} note={note}/>
     );
     return (
         <div>
-          <div id="toolbar">
-            <button onClick={this.newNote}>➕</button>
-            <input type="text" size="30" id="input"></input>
-            <button onClick={this.searchNote}>🔍</button>
-          </div>
+          <form id="toolbar">
+            <input type="button" onClick={this.newNote} value="➕"/>
+            <input type="text" size="50" id="input"/>
+            <input type="submit" onClick={this.searchNote} value="🔍"/>
+          </form>
           <div id="notes">
             {notes}
           </div>
@@ -135,12 +135,12 @@ class Note extends React.Component {
 
   render() {
     if (this.state.isHidden) {
-      return <div></div>;
+      return null;
     } else {
       return (
-          <div class="note">
-            <div class="ntitle">{this.state.title}</div>
-            <div class="nbody">{this.state.body}</div>
+          <div className="note">
+            <div className="ntitle">{this.state.title}</div>
+            <div className="nbody">{this.state.body}</div>
             <button onClick={this.editNote}>✏️</button>
             <button onClick={this.deleteNote}>🗑️</button>
           </div>
