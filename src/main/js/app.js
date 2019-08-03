@@ -53,17 +53,17 @@ class App extends React.Component {
     const searchString = document.getElementById('input').value;
 
     fetch('/api/search?query=' + encodeURIComponent(searchString))
+    .then(res => res.json().then(data => ({
+      status: res.status,
+      body: data
+    })))
     .then(res => {
-      if (res.ok) {
-        return res.json()
+      if (res.status == 200) {
+        this.setState({notes: res.body})
       } else {
-        return {notes: []};
+        alert('Error: ' + res.body.error);
       }
-    }).then(notes => {
-          this.setState({});
-          this.setState({notes: notes})
-        }
-    ).catch(error => alert('Error: ' + error));
+    }).catch(error => alert('Error: ' + error));
   }
 
   render() {

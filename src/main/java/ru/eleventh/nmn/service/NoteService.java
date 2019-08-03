@@ -1,10 +1,12 @@
 package ru.eleventh.nmn.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.eleventh.nmn.exception.EmptyQueryException;
 import ru.eleventh.nmn.exception.NoteNotFoundException;
 import ru.eleventh.nmn.model.Note;
 import ru.eleventh.nmn.model.NoteRepository;
@@ -41,6 +43,10 @@ public class NoteService {
     }
 
     public List<Note> findNote(String query) {
-        return repository.search(query);
+        if (query != "") {
+            return repository.search(query);
+        } else {
+            throw new EmptyQueryException();
+        }
     }
 }
