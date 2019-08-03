@@ -52,6 +52,6 @@ public class ApiController {
 
     @GetMapping("search")
     public ResponseEntity<?> searchNote(@RequestParam String query) {
-        return new ResponseEntity<>(noteService.findNote(query), HttpStatus.OK);
+        return new ResponseEntity<>(noteService.searchNote(query), HttpStatus.OK);
     }
 }

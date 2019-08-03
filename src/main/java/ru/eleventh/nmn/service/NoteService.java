@@ -42,7 +42,7 @@ public class NoteService {
         repository.deleteById(id);
     }
 
-    public List<Note> findNote(String query) {
+    public List<Note> searchNote(String query) {
         if (query != "") {
             return repository.search(query);
         } else {
