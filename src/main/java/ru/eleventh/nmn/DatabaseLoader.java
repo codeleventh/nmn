@@ -2,11 +2,13 @@ package ru.eleventh.nmn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.eleventh.nmn.model.Note;
 import ru.eleventh.nmn.model.NoteRepository;
 
 @Component
+@Profile("!test")
 public class DatabaseLoader implements CommandLineRunner {
 
     @Autowired
